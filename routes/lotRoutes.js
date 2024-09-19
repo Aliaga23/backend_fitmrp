@@ -1,12 +1,6 @@
 const express = require('express');
 const { createLot, getLots, getLotById, updateLot, deleteLot } = require('../controllers/lotController');
 const router = express.Router();
-const { registrarLote, asignarProductoALote } = require('../controllers/lotController');
-// Registrar un nuevo lote
-router.post('/', registrarLote);
-
-// Asignar productos a un lote durante una venta
-router.post('/asignar', asignarProductoALote);
 
 // Ruta para crear un nuevo lote
 router.post('/', createLot);

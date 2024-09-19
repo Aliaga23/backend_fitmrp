@@ -17,6 +17,12 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ message: 'La contraseña es requerida' });
     }
 
+    // Verifica si el correo ya está en uso
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: 'El correo ya está en uso' });
+    }
+
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -28,7 +34,6 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ message: 'Error al crear el usuario' });
   }
 };
-
 
 // Obtener todos los usuarios
 exports.getUsers = async (req, res) => {
@@ -61,6 +66,12 @@ exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const { nombre, email, rol_id } = req.body;
   try {
+    // Verifica si el correo ya está en uso por otro usuario
+    const existingUser = await getUserByEmail(email);
+    if (existingUser && existingUser.id !== parseInt(id)) {
+      return res.status(400).json({ message: 'El correo ya está en uso por otro usuario' });
+    }
+
     const updatedUser = await updateUser(id, nombre, email, rol_id);
     if (!updatedUser) {
       return res.status(404).json({ message: 'Usuario no encontrado' });

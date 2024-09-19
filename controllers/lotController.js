@@ -64,35 +64,3 @@ exports.updateLot = async (req, res) => {
     }
   };
   
-  const { createMovement } = require('../models/movementModel');
-
-// Registrar un nuevo lote
-exports.registrarLote = async (req, res) => {
-  const { producto_id, numero_lote, fecha_vencimiento, cantidad } = req.body;
-
-  try {
-    // Crear el lote
-    const nuevoLote = await createLot(producto_id, numero_lote, fecha_vencimiento);
-
-    // Registrar movimiento de entrada para este lote
-    await createMovement(producto_id, nuevoLote.id, 'entrada', cantidad, 'Ingreso de lote');
-
-    res.status(201).json({ message: 'Lote registrado y movimiento de entrada guardado', nuevoLote });
-  } catch (error) {
-    res.status(500).json({ message: 'Error al registrar el lote', error: error.message });
-  }
-};
-
-// Asignar productos a un lote durante una venta
-exports.asignarProductoALote = async (req, res) => {
-  const { producto_id, lote_id, cantidad_vendida } = req.body;
-
-  try {
-    // Registrar movimiento de salida
-    await createMovement(producto_id, lote_id, 'salida', cantidad_vendida, 'Venta de productos del lote');
-
-    res.status(200).json({ message: 'Venta registrada y producto asignado al lote' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error al asignar producto al lote', error: error.message });
-  }
-};
