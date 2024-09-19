@@ -8,16 +8,26 @@ const addRolPermiso = async (rolId, permisoId) => {
   return res.rows[0];
 };
 
-// Obtener todas las relaciones rol-permiso
+// Obtener todas las relaciones rol-permiso con los nombres de los roles y permisos
 const getAllRolPermisos = async () => {
-  const query = 'SELECT * FROM RolPermiso';
+  const query = `
+    SELECT rp.rol_id, r.nombre AS rol_nombre, rp.permiso_id, p.nombre AS permiso_nombre
+    FROM RolPermiso rp
+    JOIN Rol r ON rp.rol_id = r.id
+    JOIN Permiso p ON rp.permiso_id = p.id;
+  `;
   const res = await pool.query(query);
   return res.rows;
 };
 
-// Obtener permisos por rol ID
+// Obtener permisos por ID de rol
 const getPermisosByRolId = async (rolId) => {
-  const query = 'SELECT * FROM RolPermiso WHERE rol_id = $1';
+  const query = `
+    SELECT rp.permiso_id, p.nombre AS permiso_nombre
+    FROM RolPermiso rp
+    JOIN Permiso p ON rp.permiso_id = p.id
+    WHERE rp.rol_id = $1;
+  `;
   const res = await pool.query(query, [rolId]);
   return res.rows;
 };
