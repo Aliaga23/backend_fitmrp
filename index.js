@@ -19,7 +19,7 @@ const app = express();
 
 // Configuración de CORS
 app.use(cors({
-  origin: '*',
+  origin: 'fitmrp.up.railway.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
