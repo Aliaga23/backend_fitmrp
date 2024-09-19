@@ -22,7 +22,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Rutas
 app.use('/api/users', userRoutes);
