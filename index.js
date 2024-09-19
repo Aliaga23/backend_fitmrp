@@ -13,6 +13,7 @@ const qualityControlRoutes = require('./routes/qualityControlRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const rolPermisoRoute = require('./routes/rolPermisoRoutes')
 const pool = require('./config/db');
+const permisoRoutes = require('./routes/permisoRoutes');
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use('/api/quality-controls', qualityControlRoutes);
 app.use('/api/auth', authRoutes); 
 
 app.use('/api/rolpermiso', rolPermisoRoute); 
+app.use('/api/permisos', permisoRoutes);
 
 const PORT = process.env.PORT || 3001;
 
