@@ -10,7 +10,8 @@ const inventoryRoutes = require('./routes/inventoryRoutes');
 const lotRoutes = require('./routes/lotRoutes');
 const movementRoutes = require('./routes/movementRoutes');
 const qualityControlRoutes = require('./routes/qualityControlRoutes');
-const authRoutes = require('./routes/authRoutes'); // Importar rutas de autenticación
+const authRoutes = require('./routes/authRoutes'); 
+const rolPermisoRoute = require('./routes/rolPermisoRoutes')
 const pool = require('./config/db');
 
 const app = express();
@@ -33,7 +34,9 @@ app.use('/api/inventories', inventoryRoutes);
 app.use('/api/lots', lotRoutes);
 app.use('/api/movements', movementRoutes);
 app.use('/api/quality-controls', qualityControlRoutes);
-app.use('/api/auth', authRoutes); // Rutas de autenticación
+app.use('/api/auth', authRoutes); 
+
+app.use('/api/rolpermiso', rolPermisoRoute); 
 
 const PORT = process.env.PORT || 3001;
 
