@@ -9,25 +9,42 @@ const createOrdenCompra = async (proveedor_id, usuario_id, inventario_id, fecha,
   const res = await pool.query(query, values);
   return res.rows[0];
 };
-// Obtener todas las órdenes de compra con nombres de proveedor y usuario
+
+// Obtener todas las órdenes de compra con nombres de proveedor, usuario e inventario (producto)
 const getOrdenesCompra = async () => {
     const query = `
-      SELECT oc.id, p.nombre AS proveedor, u.nombre AS usuario, oc.fecha, oc.estado
+      SELECT oc.id, 
+             p.nombre AS proveedor, 
+             u.nombre AS usuario, 
+             inv.producto_id, 
+             prod.nombre AS producto,  -- Nombre del producto desde Producto
+             oc.fecha, 
+             oc.estado
       FROM OrdenCompra oc
       JOIN Proveedor p ON oc.proveedor_id = p.id
-      JOIN Usuario u ON oc.usuario_id = u.id`;
+      JOIN Usuario u ON oc.usuario_id = u.id
+      JOIN Inventario inv ON oc.inventario_id = inv.id
+      JOIN Producto prod ON inv.producto_id = prod.id`;  // Obtener el nombre del producto desde Producto
     const res = await pool.query(query);
     return res.rows;
   };
   
-  // Obtener una orden de compra por ID con nombres de proveedor y usuario
+  // Obtener una orden de compra por ID con nombres de proveedor, usuario e inventario (producto)
   const getOrdenCompraById = async (id) => {
     const query = `
-      SELECT oc.id, p.nombre AS proveedor, u.nombre AS usuario, oc.fecha, oc.estado
+      SELECT oc.id, 
+             p.nombre AS proveedor, 
+             u.nombre AS usuario, 
+             inv.producto_id, 
+             prod.nombre AS producto,  -- Nombre del producto desde Producto
+             oc.fecha, 
+             oc.estado
       FROM OrdenCompra oc
       JOIN Proveedor p ON oc.proveedor_id = p.id
       JOIN Usuario u ON oc.usuario_id = u.id
-      WHERE oc.id = $1`;
+      JOIN Inventario inv ON oc.inventario_id = inv.id
+      JOIN Producto prod ON inv.producto_id = prod.id
+      WHERE oc.id = $1`;  // Obtener el nombre del producto desde Producto
     const res = await pool.query(query, [id]);
     return res.rows[0];
   };
