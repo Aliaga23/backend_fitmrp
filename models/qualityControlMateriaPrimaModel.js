@@ -10,16 +10,25 @@ const createQualityControlMateriaPrima = async (materia_prima_id, resultado, obs
   return res.rows[0];
 };
 
-// Obtener todos los controles de calidad de materia prima
+// Obtener todos los controles de calidad de materia prima junto con el nombre de la materia prima
 const getQualityControlsMateriaPrima = async () => {
-  const query = 'SELECT * FROM ControlCalidadMateriaPrima';
+  const query = `
+    SELECT ccmp.id, ccmp.materia_prima_id, mp.nombre AS materia_prima_nombre, ccmp.resultado, ccmp.observaciones, ccmp.fecha_control
+    FROM ControlCalidadMateriaPrima ccmp
+    JOIN MateriaPrima mp ON ccmp.materia_prima_id = mp.id
+  `;
   const res = await pool.query(query);
   return res.rows;
 };
 
-// Obtener los controles de calidad por materia_prima_id
+// Obtener los controles de calidad por materia_prima_id junto con el nombre de la materia prima
 const getQualityControlByMateriaPrimaId = async (materia_prima_id) => {
-  const query = 'SELECT * FROM ControlCalidadMateriaPrima WHERE materia_prima_id = $1';
+  const query = `
+    SELECT ccmp.id, ccmp.materia_prima_id, mp.nombre AS materia_prima_nombre, ccmp.resultado, ccmp.observaciones, ccmp.fecha_control
+    FROM ControlCalidadMateriaPrima ccmp
+    JOIN MateriaPrima mp ON ccmp.materia_prima_id = mp.id
+    WHERE ccmp.materia_prima_id = $1
+  `;
   const res = await pool.query(query, [materia_prima_id]);
   return res.rows;
 };
