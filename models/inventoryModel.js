@@ -30,12 +30,13 @@ const getInventoryById = async (producto_id) => {
 // Obtener el inventario de todos los productos
 const getInventories = async () => {
   const query = `
-    SELECT p.nombre, i.cantidad_disponible
+    SELECT p.id, p.nombre, i.cantidad_disponible
     FROM Inventario i
     JOIN Producto p ON i.producto_id = p.id`;
   const res = await pool.query(query);
   return res.rows;
 };
+
 
 module.exports = {
   createInventory,
