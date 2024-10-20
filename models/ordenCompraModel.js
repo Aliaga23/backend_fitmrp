@@ -9,21 +9,29 @@ const createOrdenCompra = async (proveedor_id, usuario_id, inventario_id, fecha,
   const res = await pool.query(query, values);
   return res.rows[0];
 };
-
-// Obtener todas las órdenes de compra
+// Obtener todas las órdenes de compra con nombres de proveedor y usuario
 const getOrdenesCompra = async () => {
-  const query = 'SELECT * FROM OrdenCompra';
-  const res = await pool.query(query);
-  return res.rows;
-};
-
-// Obtener una orden de compra por ID
-const getOrdenCompraById = async (id) => {
-  const query = 'SELECT * FROM OrdenCompra WHERE id = $1';
-  const res = await pool.query(query, [id]);
-  return res.rows[0];
-};
-
+    const query = `
+      SELECT oc.id, p.nombre AS proveedor, u.nombre AS usuario, oc.fecha, oc.estado
+      FROM OrdenCompra oc
+      JOIN Proveedor p ON oc.proveedor_id = p.id
+      JOIN Usuario u ON oc.usuario_id = u.id`;
+    const res = await pool.query(query);
+    return res.rows;
+  };
+  
+  // Obtener una orden de compra por ID con nombres de proveedor y usuario
+  const getOrdenCompraById = async (id) => {
+    const query = `
+      SELECT oc.id, p.nombre AS proveedor, u.nombre AS usuario, oc.fecha, oc.estado
+      FROM OrdenCompra oc
+      JOIN Proveedor p ON oc.proveedor_id = p.id
+      JOIN Usuario u ON oc.usuario_id = u.id
+      WHERE oc.id = $1`;
+    const res = await pool.query(query, [id]);
+    return res.rows[0];
+  };
+  
 // Actualizar una orden de compra
 const updateOrdenCompra = async (id, proveedor_id, usuario_id, inventario_id, fecha, estado) => {
   const query = `
