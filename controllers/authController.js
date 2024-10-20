@@ -1,6 +1,9 @@
-// backend/controllers/authController.js
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { createUser, getUserByEmail } = require('../models/userModel');
+
+// Clave secreta para JWT (deberías usar una variable de entorno en producción)
+const JWT_SECRET = process.env.JWT_SECRET || 'secreto'; 
 
 // Registro de usuario
 exports.signUpUser = async (req, res) => {
@@ -41,8 +44,14 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
 
-    // Crear el token (implementación del token no incluida aquí)
-    res.status(200).json({ message: 'Inicio de sesión exitoso', user });
+    // Crear el token
+    const token = jwt.sign(
+      { id: user.id, email: user.email, rol_id: user.rol_id },
+      JWT_SECRET,
+      { expiresIn: '1h' } // Token expira en 1 hora
+    );
+
+    res.status(200).json({ token, user });
   } catch (error) {
     res.status(500).json({ message: 'Error en el login' });
   }
