@@ -9,20 +9,33 @@ const createOrdenCompraMateriaPrima = async (orden_compra_id, materia_prima_id, 
   const res = await pool.query(query, values);
   return res.rows[0];
 };
-
-// Obtener todas las órdenes de compra de materia prima
+// Obtener todas las órdenes de compra de materia prima con nombres de materia prima
 const getOrdenesCompraMateriaPrima = async () => {
-  const query = 'SELECT * FROM OrdenCompraMateriaPrima';
-  const res = await pool.query(query);
-  return res.rows;
-};
-
-// Obtener una orden de compra de materia prima por ID
-const getOrdenCompraMateriaPrimaById = async (orden_compra_id) => {
-  const query = 'SELECT * FROM OrdenCompraMateriaPrima WHERE orden_compra_id = $1';
-  const res = await pool.query(query, [orden_compra_id]);
-  return res.rows;
-};
+    const query = `
+      SELECT ocmp.orden_compra_id, 
+             mp.nombre AS materia_prima, 
+             ocmp.cantidad 
+      FROM OrdenCompraMateriaPrima ocmp
+      JOIN MateriaPrima mp ON ocmp.materia_prima_id = mp.id
+    `;
+    const res = await pool.query(query);
+    return res.rows;
+  };
+  
+  // Obtener una orden de compra de materia prima por ID con nombre de materia prima
+  const getOrdenCompraMateriaPrimaById = async (orden_compra_id) => {
+    const query = `
+      SELECT ocmp.orden_compra_id, 
+             mp.nombre AS materia_prima, 
+             ocmp.cantidad 
+      FROM OrdenCompraMateriaPrima ocmp
+      JOIN MateriaPrima mp ON ocmp.materia_prima_id = mp.id
+      WHERE ocmp.orden_compra_id = $1
+    `;
+    const res = await pool.query(query, [orden_compra_id]);
+    return res.rows;
+  };
+  
 
 // Actualizar una orden de compra de materia prima
 const updateOrdenCompraMateriaPrima = async (orden_compra_id, materia_prima_id, cantidad) => {
