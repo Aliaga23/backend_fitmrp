@@ -4,7 +4,7 @@ const {
   getOrdenCompraMateriaPrimaById,
   updateOrdenCompraMateriaPrima,
   deleteOrdenCompraMateriaPrima,
-} = require('../models/OrdenCompraMateriaPrimaModel');
+} = require('../models/ordenCompraMateriaPrimaModel');
 
 // Crear una nueva orden de compra de materia prima
 exports.createOrdenCompraMateriaPrima = async (req, res) => {
