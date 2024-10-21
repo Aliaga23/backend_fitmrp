@@ -22,6 +22,8 @@ const ordenCompraMateriaPrimaRoutes = require('./routes/ordenCompraMateriaPrimaR
 const proveedorRoutes = require('./routes/proveedorRoutes');
 const qualityControlMateriaPrimaRoutes = require('./routes/qualityControlMateriaPrimaRoutes');
 const evaluacionProveedorRoutes = require('./routes/evaluacionProveedorRoutes');
+const archivoRoutes = require('./routes/archivoRoutes');
+const productoArchivoRoutes = require('./routes/productoArchivoRoutes');
 
 const pool = require('./config/db');
 
@@ -57,6 +59,8 @@ app.use('/api/proveedores', proveedorRoutes);
 app.use('/api/qualitycontrol-materiaprima', qualityControlMateriaPrimaRoutes);
 app.use('/api/evaluaciones-proveedores', evaluacionProveedorRoutes);
 
+app.use('/archivos', archivoRoutes);
+app.use('/producto-archivo', productoArchivoRoutes);
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
