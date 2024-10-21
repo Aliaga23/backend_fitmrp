@@ -24,6 +24,7 @@ const qualityControlMateriaPrimaRoutes = require('./routes/qualityControlMateria
 const evaluacionProveedorRoutes = require('./routes/evaluacionProveedorRoutes');
 const archivoRoutes = require('./routes/archivoRoutes');
 const productoArchivoRoutes = require('./routes/productoArchivoRoutes');
+const ordenCompraProductoRoutes = require('./routes/ordenCompraProductoRoutes');
 
 const pool = require('./config/db');
 
@@ -65,6 +66,7 @@ app.use('/api/evaluaciones-proveedores', evaluacionProveedorRoutes);
 
 app.use('/api/archivos', archivoRoutes);
 app.use('/api/producto-archivo', productoArchivoRoutes);
+app.use('/api/ordencompra-producto', ordenCompraProductoRoutes);
 
 // Puerto en el que corre el servidor
 const PORT = process.env.PORT || 3001;
