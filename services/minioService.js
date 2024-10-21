@@ -24,7 +24,7 @@ const uploadFile = async (fileName, filePath, metaData) => {
   // Subir el archivo a MinIO
   await minioClient.fPutObject(bucketName, fileName, filePath, metaData);
 
-  // Generar la URL del archivo subido
+  // Generar la URL pública del archivo subido
   const urlArchivo = `https://${minioClient.endPoint}/${bucketName}/${fileName}`;
   return urlArchivo;
 };
