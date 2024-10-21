@@ -6,19 +6,19 @@ const {
   deleteOrdenCompra,
 } = require('../models/ordenCompraModel');
 
-// Crear una nueva orden de compra (sin proveedor_id)
+// Crear una nueva orden de compra
 exports.createOrdenCompra = async (req, res) => {
-  const { usuario_id, inventario_id, fecha, estado } = req.body;
+  const { usuario_id, fecha, estado, tipo_orden } = req.body;
 
   try {
-    const newOrdenCompra = await createOrdenCompra(usuario_id, inventario_id, fecha, estado);
+    const newOrdenCompra = await createOrdenCompra(usuario_id, fecha, estado, tipo_orden);
     res.status(201).json(newOrdenCompra);
   } catch (error) {
     res.status(500).json({ message: 'Error al crear la orden de compra', error: error.message });
   }
 };
 
-// Obtener todas las órdenes de compra (sin mostrar proveedor)
+// Obtener todas las órdenes de compra
 exports.getOrdenesCompra = async (req, res) => {
   try {
     const ordenesCompra = await getOrdenesCompra();
@@ -28,7 +28,7 @@ exports.getOrdenesCompra = async (req, res) => {
   }
 };
 
-// Obtener una orden de compra por ID (sin mostrar proveedor)
+// Obtener una orden de compra por ID
 exports.getOrdenCompraById = async (req, res) => {
   const { id } = req.params;
 
@@ -43,13 +43,13 @@ exports.getOrdenCompraById = async (req, res) => {
   }
 };
 
-// Actualizar una orden de compra (sin proveedor_id)
+// Actualizar una orden de compra
 exports.updateOrdenCompra = async (req, res) => {
   const { id } = req.params;
-  const { usuario_id, inventario_id, fecha, estado } = req.body;
+  const { usuario_id, fecha, estado, tipo_orden } = req.body;
 
   try {
-    const updatedOrdenCompra = await updateOrdenCompra(id, usuario_id, inventario_id, fecha, estado);
+    const updatedOrdenCompra = await updateOrdenCompra(id, usuario_id, fecha, estado, tipo_orden);
     if (!updatedOrdenCompra) {
       return res.status(404).json({ message: 'Orden de compra no encontrada' });
     }
