@@ -12,7 +12,7 @@ const minioClient = new Minio.Client({
 const bucketName = process.env.MINIO_BUCKET || 'imagenes';
 
 // Función para subir archivos a MinIO
-const uploadFile = async (fileName, filePath, metaData) => {
+const uploadFile = async (fileName, fileBuffer, metaData) => {
   const fileUrl = `${Date.now()}_${fileName}`;
 
   // Verifica si el bucket existe, si no lo crea
@@ -21,8 +21,8 @@ const uploadFile = async (fileName, filePath, metaData) => {
     await minioClient.makeBucket(bucketName, 'us-east-1');
   }
 
-  // Subir el archivo a MinIO
-  await minioClient.fPutObject(bucketName, fileName, filePath, metaData);
+  // Subir el archivo a MinIO usando el buffer del archivo
+  await minioClient.putObject(bucketName, fileName, fileBuffer, metaData);
 
   // Generar la URL pública del archivo subido
   const urlArchivo = `https://${minioClient.endPoint}/${bucketName}/${fileName}`;
