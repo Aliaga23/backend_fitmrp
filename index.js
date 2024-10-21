@@ -24,6 +24,7 @@ const qualityControlMateriaPrimaRoutes = require('./routes/qualityControlMateria
 const evaluacionProveedorRoutes = require('./routes/evaluacionProveedorRoutes');
 const archivoRoutes = require('./routes/archivoRoutes');
 const productoArchivoRoutes = require('./routes/productoArchivoRoutes');
+const fileUpload = require('express-fileupload');
 
 const pool = require('./config/db');
 
@@ -59,10 +60,16 @@ app.use('/api/proveedores', proveedorRoutes);
 app.use('/api/qualitycontrol-materiaprima', qualityControlMateriaPrimaRoutes);
 app.use('/api/evaluaciones-proveedores', evaluacionProveedorRoutes);
 
-app.use('/archivos', archivoRoutes);
-app.use('/producto-archivo', productoArchivoRoutes);
+app.use('/api/archivos', archivoRoutes);
+app.use('/api/producto-archivo', productoArchivoRoutes);
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
+
+// Configura express-fileupload
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/',
+}));
