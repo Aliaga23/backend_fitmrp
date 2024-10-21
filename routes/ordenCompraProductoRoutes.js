@@ -17,7 +17,8 @@ router.get('/', getAll);
 router.get('/:orden_compra_id/:producto_id', getById);
 
 // Ruta para obtener todos los productos por ID de orden de compra
-router.get('/order/:orden_compra_id', getProductsByOrderId);
+// Ruta para obtener todos los productos por ID de orden de compra
+router.get('/:orden_compra_id', getProductsByOrderId);
 
 // Ruta para crear un nuevo registro
 router.post('/', createOrdenCompraProducto);

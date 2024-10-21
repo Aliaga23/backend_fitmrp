@@ -32,19 +32,31 @@ const {
     }
   };
   
-  // Obtener todos los productos por ID de orden de compra
   exports.getProductsByOrderId = async (req, res) => {
     const { orden_compra_id } = req.params;
+  
+    // Validar que el ID de la orden de compra es un número
+    if (isNaN(orden_compra_id)) {
+      return res.status(400).json({ message: 'El ID de la orden de compra debe ser un número válido.' });
+    }
+  
     try {
       const products = await getProductsByOrderId(orden_compra_id);
-      if (products.length === 0) {
+  
+      if (!products) {
         return res.status(404).json({ message: 'No se encontraron productos para esta orden de compra.' });
       }
+  
       res.status(200).json(products);
     } catch (error) {
-      res.status(500).json({ message: 'Error al obtener los productos de la orden de compra.' });
+      // Mostrar el error en la consola para depurar
+      console.error('Error al obtener los productos de la orden de compra:', error.message);
+  
+      // Responder con un mensaje de error genérico
+      res.status(500).json({ message: 'Error interno al obtener los productos de la orden de compra.' });
     }
   };
+  
   
   // Crear un nuevo registro
   exports.createOrdenCompraProducto = async (req, res) => {

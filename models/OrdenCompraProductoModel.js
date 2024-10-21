@@ -26,15 +26,25 @@ const getById = async (orden_compra_id, producto_id) => {
 
 // Obtener todos los productos de una orden de compra específica
 const getProductsByOrderId = async (orden_compra_id) => {
-  const query = `
-    SELECT ocp.orden_compra_id, p.id AS producto_id, p.nombre AS producto_nombre, ocp.cantidad
-    FROM OrdenCompraProducto ocp
-    JOIN Producto p ON ocp.producto_id = p.id
-    WHERE ocp.orden_compra_id = $1
-  `;
-  const res = await pool.query(query, [orden_compra_id]);
-  return res.rows;
-};
+    try {
+      const query = `
+        SELECT ocp.orden_compra_id, p.id AS producto_id, p.nombre AS producto_nombre, ocp.cantidad
+        FROM OrdenCompraProducto ocp
+        JOIN Producto p ON ocp.producto_id = p.id
+        WHERE ocp.orden_compra_id = $1
+      `;
+      const res = await pool.query(query, [orden_compra_id]);
+  
+      // Verifica si hay resultados
+      if (res.rows.length === 0) {
+        return null; // Si no hay productos, retornamos null
+      }
+      return res.rows;
+    } catch (error) {
+      // Lanzar el error para que el controlador lo capture
+      throw new Error('Error en la consulta a la base de datos: ' + error.message);
+    }
+  };
 
 // Crear un nuevo registro en la tabla OrdenCompraProducto
 const createOrdenCompraProducto = async (orden_compra_id, producto_id, cantidad) => {
