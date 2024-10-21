@@ -8,10 +8,10 @@ const {
 
 // Crear una nueva orden de compra de materia prima
 exports.createOrdenCompraMateriaPrima = async (req, res) => {
-  const { orden_compra_id, materia_prima_id, cantidad } = req.body;
+  const { orden_compra_id, materia_prima_id, cantidad, proveedor_id } = req.body;
 
   try {
-    const newOrdenCompraMateriaPrima = await createOrdenCompraMateriaPrima(orden_compra_id, materia_prima_id, cantidad);
+    const newOrdenCompraMateriaPrima = await createOrdenCompraMateriaPrima(orden_compra_id, materia_prima_id, cantidad, proveedor_id);
     res.status(201).json(newOrdenCompraMateriaPrima);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -46,10 +46,10 @@ exports.getOrdenCompraMateriaPrimaById = async (req, res) => {
 // Actualizar una orden de compra de materia prima
 exports.updateOrdenCompraMateriaPrima = async (req, res) => {
   const { orden_compra_id, materia_prima_id } = req.params;
-  const { cantidad } = req.body;
+  const { cantidad, proveedor_id } = req.body;
 
   try {
-    const updatedOrdenCompraMateriaPrima = await updateOrdenCompraMateriaPrima(orden_compra_id, materia_prima_id, cantidad);
+    const updatedOrdenCompraMateriaPrima = await updateOrdenCompraMateriaPrima(orden_compra_id, materia_prima_id, cantidad, proveedor_id);
     if (!updatedOrdenCompraMateriaPrima) {
       return res.status(404).json({ message: 'Orden de compra de materia prima no encontrada' });
     }

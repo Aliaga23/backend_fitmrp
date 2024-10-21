@@ -1,10 +1,10 @@
 const pool = require('../config/db');
 
 // Crear una nueva orden de compra de materia prima, solo si hay una orden de compra de tipo producto
-const createOrdenCompraMateriaPrima = async (orden_compra_id, materia_prima_id, cantidad) => {
+const createOrdenCompraMateriaPrima = async (orden_compra_id, materia_prima_id, cantidad, proveedor_id) => {
   // Verificar si la orden de compra es de tipo 'producto'
   const queryCheckOrden = `
-    SELECT tipo_orden, proveedor_id
+    SELECT tipo_orden
     FROM OrdenCompra 
     WHERE id = $1 AND tipo_orden = 'producto'
   `;
@@ -13,8 +13,6 @@ const createOrdenCompraMateriaPrima = async (orden_compra_id, materia_prima_id, 
   if (resCheck.rows.length === 0) {
     throw new Error('Solo se puede crear una orden de compra de materia prima si la orden de compra es de tipo "producto".');
   }
-
-  const proveedor_id = resCheck.rows[0].proveedor_id;
 
   // Si existe la orden de tipo 'producto', crear la orden de compra de materia prima
   const queryInsert = `
@@ -53,14 +51,14 @@ const getOrdenCompraMateriaPrimaById = async (orden_compra_id, materia_prima_id)
 };
 
 // Actualizar una orden de compra de materia prima
-const updateOrdenCompraMateriaPrima = async (orden_compra_id, materia_prima_id, cantidad) => {
+const updateOrdenCompraMateriaPrima = async (orden_compra_id, materia_prima_id, cantidad, proveedor_id) => {
   const query = `
     UPDATE OrdenCompraMateriaPrima 
-    SET cantidad = $3 
+    SET cantidad = $3, proveedor_id = $4
     WHERE orden_compra_id = $1 AND materia_prima_id = $2 
     RETURNING *
   `;
-  const res = await pool.query(query, [orden_compra_id, materia_prima_id, cantidad]);
+  const res = await pool.query(query, [orden_compra_id, materia_prima_id, cantidad, proveedor_id]);
   return res.rows[0];
 };
 
