@@ -10,7 +10,7 @@ const ArchivoModel = {
     `;
     const values = [nombre_archivo, ruta_archivo, tipo_archivo, fecha_subida, url_archivo];
     try {
-      const result = await db.query(query, values);
+      const result = await pool.query(query, values);
       return result.rows[0];  // Devuelve el archivo insertado
     } catch (error) {
       throw error;
@@ -21,7 +21,7 @@ const ArchivoModel = {
   async getArchivoById(id) {
     const query = `SELECT * FROM Archivo WHERE id = $1;`;
     try {
-      const result = await db.query(query, [id]);
+      const result = await pool.query(query, [id]);
       return result.rows[0];  // Devuelve el archivo
     } catch (error) {
       throw error;
