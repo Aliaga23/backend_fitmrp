@@ -1,8 +1,13 @@
 const Minio = require('minio');
+const path = require('path');
+const fs = require('fs');
+
+// Definimos el endpoint
+const minioEndpoint = process.env.MINIO_ENDPOINT || 'bucket-production-96ac.up.railway.app';
 
 // Configura el cliente MinIO usando las variables de entorno
 const minioClient = new Minio.Client({
-  endPoint: process.env.MINIO_ENDPOINT || 'bucket-production-96ac.up.railway.app',
+  endPoint: minioEndpoint,  // Usamos la variable minioEndpoint
   port: parseInt(process.env.MINIO_PORT, 10) || 443,
   useSSL: true,  // Asegúrate de que esté en true porque estás usando HTTPS
   accessKey: process.env.MINIO_ACCESS_KEY || 'ftyahNvc0fDokIn88yE6',
@@ -37,13 +42,37 @@ const uploadFile = async (fileName, filePath, metaData) => {
     await minioClient.fPutObject(bucketName, fileName, filePath, metaData);
 
     // Devuelve la URL pública del archivo
-    const fileUrl = `https://${minioClient.host}:${minioClient.port}/${bucketName}/${fileName}`;
+    const fileUrl = `https://${minioEndpoint}/${bucketName}/${fileName}`;
     return fileUrl;
   } catch (error) {
     throw error;
   }
 };
+/*
+// Ejemplo de uso para subir un archivo
+const testUpload = async () => {
+  const fileName = 'test-image.jpg';  // Nombre del archivo en MinIO
+  const filePath = path.join(__dirname, fileName);  // Ruta del archivo local
 
+  // Crear un archivo de prueba
+  fs.writeFileSync(filePath, 'Este es un archivo de prueba para MinIO.');
+
+  try {
+    const fileUrl = await uploadFile(fileName, filePath, {
+      'Content-Type': 'image/jpeg',
+    });
+    console.log('Archivo subido correctamente:', fileUrl);
+  } catch (error) {
+    console.error('Error al subir el archivo:', error);
+  } finally {
+    // Elimina el archivo de prueba
+    fs.unlinkSync(filePath);
+  }
+};
+
+// Llama a la función de prueba para subir un archivo
+testUpload();
+*/
 module.exports = {
   uploadFile,
 };
