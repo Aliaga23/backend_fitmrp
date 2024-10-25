@@ -74,3 +74,21 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
+
+
+const winston = require('winston');
+require('winston-syslog');
+
+const logger = winston.createLogger({
+    transports: [
+        new winston.transports.Syslog({
+            host: '192.168.239.130',  // IP del servidor syslog (cámbialo por la IP real)
+            port: 514,  // El puerto de syslog
+            protocol: 'udp4'  // Usamos UDP para enviar logs
+        })
+    ]
+});
+
+// Ejemplos de logs
+logger.info('Este es un mensaje de prueba enviado a syslog');
+logger.error('Este es un error enviado a syslog');
