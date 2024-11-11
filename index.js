@@ -33,7 +33,7 @@ const app = express();
 
 // Middleware CORS
 app.use(cors({
-  origin: 'https://backendfitmrp-production.up.railway.app',
+  origin: 'https://fitmrp.up.railway.app/',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
