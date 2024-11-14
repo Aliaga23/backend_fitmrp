@@ -67,16 +67,18 @@ const deleteUser = async (id) => {
   }
 };
 
-// Obtener un usuario por email
+
+// Obtener usuario por email con todos los detalles necesarios
 const getUserByEmail = async (email) => {
-  const query = 'SELECT * FROM Usuario WHERE email = $1';
-  try {
-    const res = await pool.query(query, [email]);
-    return res.rows[0];
-  } catch (error) {
-    console.error('Error al obtener el usuario por email:', error);
-    throw error;
-  }
+  const query = `
+    SELECT u.*, r.nombre AS rol_nombre
+    FROM Usuario u
+    JOIN Rol r ON u.rol_id = r.id
+    WHERE u.email = $1
+  `;
+  const res = await pool.query(query, [email]);
+  return res.rows[0];
 };
+
 
 module.exports = { createUser, getUsers, getUserById, updateUser, deleteUser, getUserByEmail };

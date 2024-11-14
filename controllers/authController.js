@@ -1,10 +1,9 @@
 // controllers/authController.js
-const logger = require('../config/logger');  // Ajusta el path según tu estructura
+const logger = require('../config/logger');  
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { createUser, getUserByEmail } = require('../models/userModel');
 
-// Clave secreta para JWT
 const JWT_SECRET = process.env.JWT_SECRET || 'secreto'; 
 
 exports.signUpUser = async (req, res) => {
@@ -43,14 +42,24 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
 
+    // Crear el token JWT e incluir datos adicionales en el payload
     const token = jwt.sign(
-      { id: user.id, email: user.email, rol_id: user.rol_id },
+      { 
+        id: user.id, 
+        email: user.email, 
+        rol_id: user.rol_id,
+        nombre: user.nombre,  // Incluye el nombre del usuario en el token
+        rol_nombre: user.rol_nombre  // Incluye el nombre del rol en el token
+      },
       JWT_SECRET,
       { expiresIn: '1h' }
     );
 
     logger.info(`Inicio de sesión exitoso para el usuario: ${email}`);
-    res.status(200).json({ token, user });
+    
+    // Excluir el password de los datos enviados en la respuesta
+    const { password: _, ...userData } = user;
+    res.status(200).json({ token, user: userData });
   } catch (error) {
     logger.error(`Error en el login: ${error.message}`);
     res.status(500).json({ message: 'Error en el login' });

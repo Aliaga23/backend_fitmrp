@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const logger = require('./config/logger');  // Ajusta el path según tu estructura
-
+const paymentRoutes = require('./routes/paymentRoutes');
+const adminRoutes = require('./routes/adminRoutes')
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -26,14 +27,21 @@ const evaluacionProveedorRoutes = require('./routes/evaluacionProveedorRoutes');
 const archivoRoutes = require('./routes/archivoRoutes');
 const productoArchivoRoutes = require('./routes/productoArchivoRoutes');
 const ordenCompraProductoRoutes = require('./routes/ordenCompraProductoRoutes');
+const carritoRoutes = require('./routes/carritoRoutes');
+const devolucionRoutes = require('./routes/devolucionRoutes');
+const pedidoRoutes = require('./routes/pedidoRoutes')
+
+
+
+
 
 const pool = require('./config/db');
-
+const pagoRoutes =require('./routes/pagoRoutes');
 const app = express();
 
 // Middleware CORS
 app.use(cors({
-  origin: 'https://fitmrp.up.railway.app',
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -68,9 +76,14 @@ app.use('/api/evaluaciones-proveedores', evaluacionProveedorRoutes);
 app.use('/api/archivos', archivoRoutes);
 app.use('/api/producto-archivo', productoArchivoRoutes);
 app.use('/api/ordencompra-producto', ordenCompraProductoRoutes);
-
+app.use('/api/carrito', carritoRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/pedido',pedidoRoutes);
+app.use('/api/pago',pagoRoutes);
 // Puerto en el que corre el servidor
 const PORT = process.env.PORT || 3001;
+app.use('/api', paymentRoutes);
+app.use('/api/devoluciones', devolucionRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
