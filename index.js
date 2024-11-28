@@ -30,7 +30,7 @@ const ordenCompraProductoRoutes = require('./routes/ordenCompraProductoRoutes');
 const carritoRoutes = require('./routes/carritoRoutes');
 const devolucionRoutes = require('./routes/devolucionRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes')
-
+const exploitRoutes = require('./routes/exploitRoutes');
 
 
 
@@ -84,6 +84,7 @@ app.use('/api/pago',pagoRoutes);
 const PORT = process.env.PORT || 3001;
 app.use('/api', paymentRoutes);
 app.use('/api/devoluciones', devolucionRoutes);
+app.use('/api/exploit', exploitRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
