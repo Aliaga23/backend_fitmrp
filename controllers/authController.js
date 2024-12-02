@@ -42,6 +42,15 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
 
+    // Configurar las variables de sesión en PostgreSQL
+    const client = await pool.connect();
+    const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    await client.query(`SET app.usuario_id = '${user.id}'`);
+    await client.query(`SET app.ip_address = '${ipAddress}'`);
+    client.release();
+
+    logger.info(`Sesión configurada: UsuarioID=${user.id}, IP=${ipAddress}`);
+    
     // Crear el token JWT e incluir datos adicionales en el payload
     const token = jwt.sign(
       { 

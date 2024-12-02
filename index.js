@@ -31,7 +31,6 @@ const carritoRoutes = require('./routes/carritoRoutes');
 const devolucionRoutes = require('./routes/devolucionRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes')
 const sessionMiddleware = require('./middlewares/sessionMiddleware');
-const authMiddleware = require('./middlewares/authMiddleware').verifyToken; // Verificar token JWT
 
 // Middleware global para configurar sesión en PostgreSQL
 
@@ -51,7 +50,6 @@ app.use(fileUpload());
 // Middleware para JSON y parsing
 app.use(express.json());
 app.use(sessionMiddleware);
-app.use(authMiddleware);
 
 // Rutas del API
 app.use('/api/users', userRoutes);
