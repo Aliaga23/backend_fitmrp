@@ -49,7 +49,6 @@ app.use(cors({
 app.use(fileUpload());
 // Middleware para JSON y parsing
 app.use(express.json());
-app.use(sessionMiddleware);
 
 // Rutas del API
 app.use('/api/users', userRoutes);

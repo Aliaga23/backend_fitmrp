@@ -2,6 +2,9 @@
 const logger = require('../config/logger');  
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const pool = require('../config/db');
+const requestIp = require('request-ip'); // Importa el paquete request-ip
+
 const { createUser, getUserByEmail } = require('../models/userModel');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secreto'; 
@@ -42,30 +45,29 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
 
-    // Configurar las variables de sesión en PostgreSQL
-    const client = await pool.connect();
-    const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    await client.query(`SET app.usuario_id = '${user.id}'`);
-    await client.query(`SET app.ip_address = '${ipAddress}'`);
-    client.release();
-
-    logger.info(`Sesión configurada: UsuarioID=${user.id}, IP=${ipAddress}`);
-    
+  
     // Crear el token JWT e incluir datos adicionales en el payload
+   
     const token = jwt.sign(
-      { 
-        id: user.id, 
-        email: user.email, 
-        rol_id: user.rol_id,
-        nombre: user.nombre,  // Incluye el nombre del usuario en el token
-        rol_nombre: user.rol_nombre  // Incluye el nombre del rol en el token
-      },
+      { id: user.id, email: user.email, rol_id: user.rol_id },
+
       JWT_SECRET,
       { expiresIn: '1h' }
     );
 
     logger.info(`Inicio de sesión exitoso para el usuario: ${email}`);
+   // Obtener la dirección IP del cliente usando request-ip
+   const ipAddress = requestIp.getClientIp(req);
+
+   // Configurar las variables de sesión en PostgreSQL
+   const client = await pool.connect();
+   await client.query(`SET app.usuario_id = '${user.id}'`);
+   await client.query(`SET app.ip_address = '${ipAddress}'`);
+   client.release();
+
+   logger.info(`Sesión configurada: UsuarioID=${user.id}, IP=${ipAddress}`);
     
+      
     // Excluir el password de los datos enviados en la respuesta
     const { password: _, ...userData } = user;
     res.status(200).json({ token, user: userData });
