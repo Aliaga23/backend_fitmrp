@@ -3,6 +3,7 @@ const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { createUser, getUserByEmail } = require('../models/userModel');
+const pool = require('../config/db');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secreto'; 
 
@@ -41,6 +42,18 @@ exports.loginUser = async (req, res) => {
       logger.warn(`Contraseña incorrecta para el usuario: ${email}`);
       return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
+    console.log('User ID:', user.id);
+    console.log('User IP:', req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+    
+    // Configurar las variables de sesión en PostgreSQL
+    const client = await pool.connect();
+    try {
+      await client.query(`SET SESSION "app.user_id" = '${user.id}'`);
+      await client.query(`SET SESSION "app.user_ip" = '${req.headers['x-forwarded-for'] || req.connection.remoteAddress}'`);
+      
+    } finally {
+      client.release();
+    }
 
     // Crear el token JWT e incluir datos adicionales en el payload
     const token = jwt.sign(
@@ -48,8 +61,8 @@ exports.loginUser = async (req, res) => {
         id: user.id, 
         email: user.email, 
         rol_id: user.rol_id,
-        nombre: user.nombre,  // Incluye el nombre del usuario en el token
-        rol_nombre: user.rol_nombre  // Incluye el nombre del rol en el token
+        nombre: user.nombre,
+        rol_nombre: user.rol_nombre
       },
       JWT_SECRET,
       { expiresIn: '1h' }
@@ -57,8 +70,7 @@ exports.loginUser = async (req, res) => {
 
     logger.info(`Inicio de sesión exitoso para el usuario: ${email}`);
     
-    // Excluir el password de los datos enviados en la respuesta
-    const { password: _, ...userData } = user;
+    const { password: _, ...userData } = user; // Excluir el password de la respuesta
     res.status(200).json({ token, user: userData });
   } catch (error) {
     logger.error(`Error en el login: ${error.message}`);
