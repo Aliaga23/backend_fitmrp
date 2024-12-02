@@ -5,8 +5,7 @@ const { verifyToken } = require('../middlewares/authMiddleware');
 const registrarBitacora = require('../middlewares/bitacoraMiddleware');
 
 // Ruta para crear un rol
-router.post('/',verifyToken,
-    registrarBitacora('Creación de un producto'), createRole);
+router.post('/',verifyToken,  registrarBitacora('Creación de un producto'), createRole);
 
 // Ruta para obtener todos los roles
 router.get('/', getRoles);
