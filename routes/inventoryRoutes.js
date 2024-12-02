@@ -5,18 +5,41 @@ const {
   getInventoryById,
   getInventories,
 } = require('../controllers/inventoryController');
+const { verifyToken } = require('../middlewares/authMiddleware');
+const registrarBitacora = require('../middlewares/bitacoraMiddleware');
+
 const router = express.Router();
 
 // Ruta para crear un nuevo inventario de producto
-router.post('/', createInventory);
+router.post(
+  '/',
+  verifyToken,
+  registrarBitacora('Creación de un nuevo inventario de producto'),
+  createInventory
+);
 
 // Ruta para actualizar el stock de un producto (entrada o salida)
-router.put('/:producto_id', updateInventory);
+router.put(
+  '/:producto_id',
+  verifyToken,
+  registrarBitacora('Actualización del stock de un producto'),
+  updateInventory
+);
 
 // Ruta para obtener el inventario de un producto específico
-router.get('/:producto_id', getInventoryById);
+router.get(
+  '/:producto_id',
+  verifyToken,
+  registrarBitacora('Consulta del inventario de un producto específico'),
+  getInventoryById
+);
 
 // Ruta para obtener el inventario de todos los productos
-router.get('/', getInventories);
+router.get(
+  '/',
+  verifyToken,
+  registrarBitacora('Consulta del inventario de todos los productos'),
+  getInventories
+);
 
 module.exports = router;
