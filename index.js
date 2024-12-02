@@ -30,6 +30,9 @@ const ordenCompraProductoRoutes = require('./routes/ordenCompraProductoRoutes');
 const carritoRoutes = require('./routes/carritoRoutes');
 const devolucionRoutes = require('./routes/devolucionRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes')
+const sessionMiddleware = require('./middlewares/sessionMiddleware');
+
+// Middleware global para configurar sesión en PostgreSQL
 
 
 const pool = require('./config/db');
@@ -46,6 +49,7 @@ app.use(cors({
 app.use(fileUpload());
 // Middleware para JSON y parsing
 app.use(express.json());
+app.use(sessionMiddleware);
 
 // Rutas del API
 app.use('/api/users', userRoutes);
