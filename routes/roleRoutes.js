@@ -1,9 +1,12 @@
 const express = require('express');
 const { createRole, getRoles, getRoleById, updateRole, deleteRole } = require('../controllers/roleController');
 const router = express.Router();
+const { verifyToken } = require('../middlewares/authMiddleware');
+const registrarBitacora = require('../middlewares/bitacoraMiddleware');
 
 // Ruta para crear un rol
-router.post('/', createRole);
+router.post('/',verifyToken,
+    registrarBitacora('Creación de un producto'), createRole);
 
 // Ruta para obtener todos los roles
 router.get('/', getRoles);

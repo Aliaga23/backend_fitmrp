@@ -46,6 +46,7 @@ app.use(cors({
 app.use(fileUpload());
 // Middleware para JSON y parsing
 app.use(express.json());
+app.set('trust proxy', true); // Habilita el soporte para IPs detrás de proxies
 
 // Rutas del API
 app.use('/api/users', userRoutes);
