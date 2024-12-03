@@ -31,6 +31,8 @@ const carritoRoutes = require('./routes/carritoRoutes');
 const devolucionRoutes = require('./routes/devolucionRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes');
 const bitacoraRoutes = require('./routes/bitacoraRoutes');
+const reportesRoutes = require('./routes/reportesRoutes');
+
 
 const pool = require('./config/db');
 const pagoRoutes =require('./routes/pagoRoutes');
@@ -83,6 +85,7 @@ const PORT = process.env.PORT || 3001;
 app.use('/api', paymentRoutes);
 app.use('/api/devoluciones', devolucionRoutes);
 app.use('/api/bitacora', bitacoraRoutes);
+app.use('/api/reportes', reportesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
